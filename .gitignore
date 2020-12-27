@@ -15,4 +15,5 @@
 # vendor/
 
 signal-exporter*
-output
+outputs/*
+!outputs/.gitkeep

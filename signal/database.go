@@ -39,7 +39,7 @@ func (s *signal) copyDatabase() {
 	log.Print(color.GreenString("[OK] "), "Make safty copy of database")
 }
 
-func (s *signal) exportDatabase() []models.SignalData {
+func (s *signal) exportDatabase() *models.SignalData {
 	path := s.tmpDir + "/db.sqlite"
 
 	var b bytes.Buffer
@@ -56,7 +56,9 @@ func (s *signal) exportDatabase() []models.SignalData {
 		return nil
 	}
 
-	var data []models.SignalData
+	data := &models.SignalData{
+		Conversations: make(map[string]*models.SignalConverstation),
+	}
 
 	log.Print(color.GreenString("[OK] "), "Getting database input")
 
@@ -66,7 +68,7 @@ func (s *signal) exportDatabase() []models.SignalData {
 			continue
 		}
 
-		var d models.SignalData
+		var d models.SignalMessage
 
 		err := json.Unmarshal(scanner.Bytes(), &d)
 		if err != nil {
@@ -74,11 +76,18 @@ func (s *signal) exportDatabase() []models.SignalData {
 			log.Fatal("Cannot parse", err, scanner.Text())
 			return nil
 		} else {
-			data = append(data, d)
+			if _, ok := data.Conversations[d.ConversationID]; !ok {
+				data.Conversations[d.ConversationID] = &models.SignalConverstation{
+					ConversationID: d.ConversationID,
+					Messages:       []models.SignalMessage{},
+				}
+			}
+
+			data.Conversations[d.ConversationID].Messages = append(data.Conversations[d.ConversationID].Messages, d)
 		}
 	}
 
-	log.Print(color.GreenString("[OK] "), fmt.Sprintf("Parsing done. Found %d", len(data)))
+	log.Print(color.GreenString("[OK] "), fmt.Sprintf("Parsing done. Found %d", len(data.Conversations)))
 
 	return data
 }

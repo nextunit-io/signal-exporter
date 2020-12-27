@@ -43,7 +43,7 @@ type SignalQuote struct {
 	Attachments []SignalAttachments `json:"attachments"`
 }
 
-type SignalData struct {
+type SignalMessage struct {
 	ID                         string              `json:"id"`
 	Attachments                []SignalAttachments `json:"attachments"`
 	Timestamp                  int                 `json:"timestamp"`
@@ -68,4 +68,13 @@ type SignalData struct {
 	SupportedVersionAtReceive  int                 `json:"supportedVersionAtReceive"`
 	Quote                      SignalQuote         `json:"quote"`
 	Sticker                    string              `json:"sticker"`
+}
+
+type SignalConverstation struct {
+	ConversationID string
+	Messages       []SignalMessage
+}
+
+type SignalData struct {
+	Conversations map[string]*SignalConverstation
 }

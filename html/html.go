@@ -5,12 +5,13 @@ import (
 )
 
 type html struct {
-	outputPath string `default:"outputs/"`
-	data       []models.SignalData
+	outputPath string
+	data       *models.SignalData
 }
 
-func New(signalData []models.SignalData) *html {
+func New(signalData *models.SignalData, outputPath string) *html {
 	return &html{
-		data: signalData,
+		data:       signalData,
+		outputPath: outputPath,
 	}
 }
