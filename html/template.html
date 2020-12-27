@@ -10,12 +10,14 @@
 <body>
   <!-- TODO GOOD OUTPUT -->
   {{ range .Messages}}
-    {{ if not .SentTo }}
-HE/SHE:
-    {{ else }}
-ME:
+    {{ if .Body }}
+      {{ if eq .Type "incoming"  }}
+  HE/SHE:
+      {{ else if eq .Type "outgoing" }}
+  ME:
+      {{ end }}
+      "{{ .Body }}"
     {{ end }}
-    {{ .Body }}
   {{ end }}
 </body>
 
