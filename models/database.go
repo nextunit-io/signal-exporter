@@ -51,6 +51,7 @@ type SignalMessage struct {
 	SourceUUID                 string              `json:"sourceUuid"`
 	SourceDevice               int                 `json:"sourceDevice"`
 	SentAt                     int                 `json:"sent_at"`
+	SentTo                     []string            `json:"sent_to"`
 	ServerTimestamp            int                 `json:"serverTimestamp"`
 	ReceivedAt                 int                 `json:"received_at"`
 	ConversationID             string              `json:"conversationId"`

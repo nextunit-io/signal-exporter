@@ -10,6 +10,11 @@
 <body>
   <!-- TODO GOOD OUTPUT -->
   {{ range .Messages}}
+    {{ if not .SentTo }}
+HE/SHE:
+    {{ else }}
+ME:
+    {{ end }}
     {{ .Body }}
   {{ end }}
 </body>

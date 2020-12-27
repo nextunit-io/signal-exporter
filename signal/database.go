@@ -18,25 +18,25 @@ import (
 func (s *signal) copyDatabase() {
 	from, err := os.Open(s.path + "/sql/db.sqlite")
 	if err != nil {
-		log.Print(color.RedString("[FAILED] "), "Make safty copy of database")
+		log.Print(color.RedString("[FAILED] "), "Make safety copy of database")
 		log.Fatal(err)
 	}
 	defer from.Close()
 
 	to, err := os.OpenFile(s.tmpDir+"/db.sqlite", os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
-		log.Print(color.RedString("[FAILED] "), "Make safty copy of database")
+		log.Print(color.RedString("[FAILED] "), "Make safety copy of database")
 		log.Fatal(err)
 	}
 	defer to.Close()
 
 	_, err = io.Copy(to, from)
 	if err != nil {
-		log.Print(color.RedString("[FAILED] "), "Make safty copy of database")
+		log.Print(color.RedString("[FAILED] "), "Make safety copy of database")
 		log.Fatal(err)
 	}
 
-	log.Print(color.GreenString("[OK] "), "Make safty copy of database")
+	log.Print(color.GreenString("[OK] "), "Make safety copy of database")
 }
 
 func (s *signal) exportDatabase() *models.SignalData {
