@@ -2,23 +2,54 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Go Template</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+    integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+    crossorigin="anonymous" />
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+    integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"
+    integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf"
+    crossorigin="anonymous"></script>
+
+  <title>Go Template</title>
 </head>
 
 <body>
-  <!-- TODO GOOD OUTPUT -->
-  {{ range .Messages}}
-    {{ if .Body }}
-      {{ if eq .Type "incoming"  }}
-  HE/SHE:
-      {{ else if eq .Type "outgoing" }}
-  ME:
+  <div class="container text-light">
+    {{ range .Messages }}
+      {{ if .Message.Body }}
+      <div class="row mb-2 justify-content-{{ if eq .Message.Type "incoming" }}start{{ else if eq .Message.Type "outgoing"}}end{{ end }}">
+        <div class="col-4{{- if eq .Message.Type "outgoing" }}
+        text-right
+        {{- end }}" data-message-id="{{ .Message.ID }}">
+          <span class="d-inline-block rounded p-2{{- if eq .Message.Type "incoming" }}
+          bg-primary
+          {{- else if eq .Message.Type "outgoing"}}
+          bg-secondary
+          {{- end }}">
+          {{ range .Attachments}}
+            <img src="{{attachmentThumbnail .}}" />
+          {{end}}
+          {{ .Message.Body }}<br />
+          <span style="color: #CCC" class="d-block{{- if eq .Message.Type "outgoing" }}
+          float-right
+          {{- end }}"><small><i class="fas fa-clock"></i> {{timestamp .Message.Timestamp}}</small></span>
+        </span>
+        </div>
+      </div>
       {{ end }}
-      "{{ .Body }}"
     {{ end }}
-  {{ end }}
+
+  </div>
+
+
+  <!-- TODO GOOD OUTPUT -->
+
 </body>
 
 </html>

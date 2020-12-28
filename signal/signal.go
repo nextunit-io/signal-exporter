@@ -6,14 +6,14 @@ import (
 	"os"
 )
 
-type signal struct {
+type Signal struct {
 	path   string
 	tmpDir string
 	config config
 }
 
-func New(signalPath string) *signal {
-	s := &signal{
+func New(signalPath string) *Signal {
+	s := &Signal{
 		path: signalPath,
 	}
 
@@ -22,7 +22,7 @@ func New(signalPath string) *signal {
 	return s
 }
 
-func (s *signal) prepare() {
+func (s *Signal) prepare() {
 	s.getConfig()
 
 	directory, err := ioutil.TempDir(os.TempDir(), "export")
@@ -34,10 +34,10 @@ func (s *signal) prepare() {
 	s.copyDatabase()
 }
 
-func (s *signal) Execute() {
+func (s *Signal) Execute() {
 	data := s.exportDatabase()
 
-	g, err := GetGenerator(GeneratorHTML, data)
+	g, err := s.GetGenerator(GeneratorHTML, data)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -45,6 +45,10 @@ func (s *signal) Execute() {
 	g.Generate()
 }
 
-func (s *signal) Finish() {
+func (s *Signal) Finish() {
+	os.RemoveAll(s.tmpDir)
+}
 
+func (s *Signal) GetHomePath() string {
+	return s.path
 }

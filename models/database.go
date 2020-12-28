@@ -1,8 +1,14 @@
 package models
 
+import (
+	"fmt"
+)
+
 // TODO Bodyranges
-// TODO Attachments
-type SignalAttachments struct {
+type SignalAttachment struct {
+	*SignalImage
+
+	Screenshot SignalMediaBase `json:"screenshot"`
 }
 
 type SignalPreview struct {
@@ -13,7 +19,7 @@ type SignalPreview struct {
 	Date        string      `json:"date"`
 }
 
-type SignalImageBase struct {
+type SignalMediaBase struct {
 	ContentType string `json:"contentType"`
 	Path        string `json:"path"`
 	Width       int    `json:"width"`
@@ -21,26 +27,26 @@ type SignalImageBase struct {
 }
 
 type SignalImage struct {
-	*SignalImageBase
+	*SignalMediaBase
 
 	AttachmentIdentifier string          `json:"attachment_identifier"`
 	CdnKey               string          `json:"cdnKey"`
 	Size                 int             `json:"size"`
 	Filename             string          `json:"fileName"`
-	Flags                string          `json:"flags"`
+	Flags                int             `json:"flags"`
 	Caption              string          `json:"caption"`
 	BlurHash             string          `json:"blurHash"`
-	UploadTimestamp      int             `json:"uploadTimestamp`
+	UploadTimestamp      int64           `json:"uploadTimestamp`
 	CdnNumber            int             `json:"cdnNumber"`
-	Thumbnail            SignalImageBase `json:"thumbnail"`
+	Thumbnail            SignalMediaBase `json:"thumbnail"`
 }
 
 type SignalQuote struct {
-	ID          int                 `json:"id"`
-	Author      string              `json:"author"`
-	AuthorUUID  string              `json:"authorUuid"`
-	Text        string              `json:"text"`
-	Attachments []SignalAttachments `json:"attachments"`
+	ID          int                `json:"id"`
+	Author      string             `json:"author"`
+	AuthorUUID  string             `json:"authorUuid"`
+	Text        string             `json:"text"`
+	Attachments []SignalAttachment `json:"attachments"`
 }
 
 type SignalMessageExpirationTimer struct {
@@ -51,14 +57,14 @@ type SignalMessageExpirationTimer struct {
 }
 type SignalMessage struct {
 	ID                         string                       `json:"id"`
-	Attachments                []SignalAttachments          `json:"attachments"`
-	Timestamp                  int                          `json:"timestamp"`
+	Attachments                []SignalAttachment           `json:"attachments"`
+	Timestamp                  int64                        `json:"timestamp"`
 	Source                     string                       `json:"source"`
 	SourceUUID                 string                       `json:"sourceUuid"`
 	SourceDevice               int                          `json:"sourceDevice"`
 	SentAt                     int                          `json:"sent_at"`
 	SentTo                     []string                     `json:"sent_to"`
-	ServerTimestamp            int                          `json:"serverTimestamp"`
+	ServerTimestamp            int64                        `json:"serverTimestamp"`
 	ReceivedAt                 int                          `json:"received_at"`
 	ConversationID             string                       `json:"conversationId"`
 	UnidentifiedDeliveryRecord bool                         `json:"unidentifiedDeliveryRecord"`
@@ -114,7 +120,7 @@ type SignalConverstation struct {
 	Archived                   bool                           `json:"isArchived"`
 	LastMessage                string                         `json:"lastMessage"`
 	LastMessageStatus          string                         `json:"lastMessageStatus"`
-	Timestamp                  string                         `json:"timestamü"`
+	Timestamp                  int64                          `json:"timestamü"`
 	Capabilities               SignalConversationCapabilities `json:"capabilities"`
 	MarkedUnread               bool                           `json:"markedUnread"`
 	SharedGroupNames           []string                       `json:"sharedGroupNames"`
@@ -127,8 +133,8 @@ type SignalConverstation struct {
 	InboxPosition              int                            `json:"inbox_position"`
 	Avatar                     SignalProfileAvatar            `json:"avatar"`
 	QuoteMessageID             string                         `json:"quoteMessageId"`
-	DraftAttachments           []SignalAttachments            `json:"draftAttachments"`
-	DraftTimestamp             int                            `json:"draftTimestamp"`
+	DraftAttachments           []SignalAttachment             `json:"draftAttachments"`
+	DraftTimestamp             int64                          `json:"draftTimestamp"`
 	isPinned                   bool                           `json:"isPinned"`
 	UnreadCount                int                            `json:"unreadCount"`
 	Verified                   int                            `json:"verified"`
@@ -139,4 +145,41 @@ type SignalConverstation struct {
 
 type SignalData struct {
 	Conversations []SignalConverstation
+}
+
+func (file *SignalMediaBase) GetExtension() (string, error) {
+	switch file.ContentType {
+	case "image/gif":
+		return "gif", nil
+	case "image/jpeg":
+		return "jpeg", nil
+	case "image/png":
+		return "png", nil
+	case "image/tiff":
+		return "tiff", nil
+	case "image/svg+xml":
+		return "svg", nil
+	case "audio/mpeg":
+		return "mpeg", nil
+	case "audio/aac":
+		return "aac", nil
+	case "text/css":
+		return "css", nil
+	case "text/csv":
+		return "csv", nil
+	case "text/html":
+		return "html", nil
+	case "text/javascript":
+		return "js", nil
+	case "text/plain":
+		return "txt", nil
+	case "text/xml":
+		return "xml", nil
+	case "video/mpeg":
+		return "mpeg", nil
+	case "video/mp4":
+		return "mp4", nil
+	}
+
+	return "", fmt.Errorf("Not supported type %s", file.ContentType)
 }

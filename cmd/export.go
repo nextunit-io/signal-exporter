@@ -21,8 +21,8 @@ var exportCmd = &cobra.Command{
 	Long:  "Export given chats into different formats",
 	Run: func(cmd *cobra.Command, args []string) {
 		var signalObj = signal.New(exportCmdConfigPath)
-
 		defer signalObj.Finish()
+
 		signalObj.Execute()
 	},
 }

@@ -14,7 +14,7 @@ type config struct {
 	MediaPermission bool   `json:"mediaPermission"`
 }
 
-func (s *signal) getConfig() {
+func (s *Signal) getConfig() {
 	jsonFile, err := os.Open(s.path + "/config.json")
 	if err != nil {
 		log.Fatal(err)

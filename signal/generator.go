@@ -19,10 +19,10 @@ type Generator interface {
 	Generate() error
 }
 
-func GetGenerator(generatorType GeneratorType, data *models.SignalData) (Generator, error) {
+func (s *Signal) GetGenerator(generatorType GeneratorType, data *models.SignalData) (Generator, error) {
 	switch generatorType {
 	case GeneratorHTML:
-		return html.New(data, outputPath), nil
+		return html.New(s.path, data, outputPath), nil
 	default:
 		return nil, errors.New("Invalid generator type")
 	}

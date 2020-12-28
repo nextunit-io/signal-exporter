@@ -6,11 +6,13 @@ import (
 
 type html struct {
 	outputPath string
+	signalPath string
 	data       *models.SignalData
 }
 
-func New(signalData *models.SignalData, outputPath string) *html {
+func New(signalPath string, signalData *models.SignalData, outputPath string) *html {
 	return &html{
+		signalPath: signalPath,
 		data:       signalData,
 		outputPath: outputPath,
 	}

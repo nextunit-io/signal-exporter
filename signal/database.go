@@ -15,11 +15,11 @@ import (
 	"nextunit.io/signal-exporter/models"
 )
 
-func (s *signal) getTempDatabasePath() string {
+func (s *Signal) getTempDatabasePath() string {
 	return fmt.Sprintf("%s/%s", s.tmpDir, "db.sqlite")
 }
 
-func (s *signal) copyDatabase() {
+func (s *Signal) copyDatabase() {
 	from, err := os.Open(s.path + "/sql/db.sqlite")
 	if err != nil {
 		log.Print(color.RedString("[FAILED] "), "Make safety copy of database")
@@ -43,7 +43,7 @@ func (s *signal) copyDatabase() {
 	log.Print(color.GreenString("[OK] "), "Make safety copy of database")
 }
 
-func (s *signal) exportDatabase() *models.SignalData {
+func (s *Signal) exportDatabase() *models.SignalData {
 	data := &models.SignalData{
 		Conversations: s.exportConversations(),
 	}
@@ -63,7 +63,7 @@ func (s *signal) exportDatabase() *models.SignalData {
 	return data
 }
 
-func (s *signal) exportMessages(conversationID string) []models.SignalMessage {
+func (s *Signal) exportMessages(conversationID string) []models.SignalMessage {
 	var b bytes.Buffer
 	var database bytes.Buffer
 
@@ -103,7 +103,7 @@ func (s *signal) exportMessages(conversationID string) []models.SignalMessage {
 	return data
 }
 
-func (s *signal) exportConversations() []models.SignalConverstation {
+func (s *Signal) exportConversations() []models.SignalConverstation {
 	var b bytes.Buffer
 	var database bytes.Buffer
 
