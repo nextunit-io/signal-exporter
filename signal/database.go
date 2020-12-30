@@ -52,7 +52,9 @@ func (s *Signal) exportDatabase() *models.SignalData {
 
 	messageCount := 0
 	for i := range data.Conversations {
-		data.Conversations[i].Messages = s.exportMessages(data.Conversations[i].ID)
+		messages := s.exportMessages(data.Conversations[i].ID)
+		data.Conversations[i].Messages = messages
+
 		messageCount += len(data.Conversations[i].Messages)
 	}
 
@@ -83,9 +85,10 @@ func (s *Signal) exportMessages(conversationID string) []models.SignalMessage {
 
 	data := []models.SignalMessage{}
 	scanner := bufio.NewScanner(strings.NewReader(database.String()))
-	var d models.SignalMessage
 
 	for scanner.Scan() {
+		var d models.SignalMessage
+
 		if scanner.Text() == "ok" {
 			continue
 		}
