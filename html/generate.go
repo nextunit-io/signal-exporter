@@ -8,6 +8,8 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/fatih/color"
@@ -44,6 +46,7 @@ func (data *html) Generate() error {
 			},
 			"attachmentThumbnail": func(attachment htmlAttachment) string {
 				var path string
+
 				if attachment.HTMLThumbnailPath != "" {
 					path = attachment.HTMLThumbnailPath
 				} else if attachment.HTMLPath != "" {
@@ -117,13 +120,19 @@ func (data *html) prepareMessages(conversation models.SignalConverstation) map[s
 	return d
 }
 
-// TODO - Not every attachment is shown - just a few
 func (data *html) prepareAttachments(conversationID string, message models.SignalMessage) []htmlAttachment {
 	d := []htmlAttachment{}
 	os.MkdirAll(data.getHTMLAttachmentPath(conversationID), os.ModePerm)
 
 	for _, attachment := range message.Attachments {
-		filename := fmt.Sprintf("%s-%d", attachment.CdnKey, attachment.UploadTimestamp)
+		filename := strconv.Itoa(int(attachment.UploadTimestamp))
+		if attachment.CdnKey != "" {
+			filename = fmt.Sprintf("%s-%s", attachment.CdnKey, filename)
+		}
+		if attachment.Filename != "" {
+			filename = fmt.Sprintf("%s-%s", attachment.Filename, filename)
+		}
+		filename = strings.ReplaceAll(filename, ".", "-")
 
 		ext, err := attachment.GetExtension()
 		if err != nil {
@@ -139,7 +148,7 @@ func (data *html) prepareAttachments(conversationID string, message models.Signa
 				continue
 			}
 
-			thumbnailPath := fmt.Sprintf("%s/%s-thumnail.%s", data.getHTMLAttachmentPath((conversationID)), filename, thumbnailExt)
+			thumbnailPath = fmt.Sprintf("%s/%s-thumnail.%s", data.getHTMLAttachmentPath((conversationID)), filename, thumbnailExt)
 			err = copyFile(fmt.Sprintf("%s/attachments.noindex/%s", data.signalPath, attachment.Thumbnail.Path), thumbnailPath)
 
 			if err != nil {
