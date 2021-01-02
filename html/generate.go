@@ -38,6 +38,10 @@ func (message SortMessages) Less(i, j int) bool {
 
 func (data *html) Generate() error {
 	for _, c := range data.data.Conversations {
+		attachmentLinkFunc := func(path string) string {
+			return fmt.Sprintf("./attachments/%s", filepath.Base(path))
+		}
+
 		functions := template.FuncMap{
 			"timestamp": func(timestamp int64) string {
 				t := time.Unix(timestamp/1000, 0)
@@ -53,7 +57,17 @@ func (data *html) Generate() error {
 					path = attachment.HTMLPath
 				}
 
-				return fmt.Sprintf("./attachments/%s", filepath.Base(path))
+				return attachmentLinkFunc(path)
+			},
+			"attachmentLink": attachmentLinkFunc,
+			"attachmentIsVideo": func(attachment htmlAttachment) bool {
+				attachmentType, err := attachment.Attachment.GetFileType()
+				if err != nil {
+					log.Print(color.RedString("[FAILED] "), fmt.Sprintf("attachmentIsVideo is failing for type %s: %s", attachment.Attachment.ContentType, err))
+					return false
+				}
+
+				return attachmentType == models.VIDEO
 			},
 		}
 
@@ -75,9 +89,17 @@ func (data *html) Generate() error {
 			err = t.Execute(f, struct {
 				Conversation models.SignalConverstation
 				Messages     []htmlMessage
+				Config       struct {
+					MediaTypeVideo models.SignalMediaType
+				}
 			}{
 				Conversation: c,
 				Messages:     message,
+				Config: struct {
+					MediaTypeVideo models.SignalMediaType
+				}{
+					MediaTypeVideo: models.VIDEO,
+				},
 			})
 
 			if err != nil {

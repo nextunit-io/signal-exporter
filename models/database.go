@@ -26,6 +26,16 @@ type SignalMediaBase struct {
 	Height      int    `json:"height"`
 }
 
+type SignalMediaType int
+
+const (
+	UNKNOWN SignalMediaType = iota
+	VIDEO
+	IMAGE
+	AUDIO
+	TEXT
+)
+
 type SignalImage struct {
 	*SignalMediaBase
 
@@ -145,6 +155,43 @@ type SignalConverstation struct {
 
 type SignalData struct {
 	Conversations []SignalConverstation
+}
+
+func (file *SignalMediaBase) GetFileType() (SignalMediaType, error) {
+	switch file.ContentType {
+	case "image/gif":
+		return IMAGE, nil
+	case "image/jpeg":
+		return IMAGE, nil
+	case "image/png":
+		return IMAGE, nil
+	case "image/tiff":
+		return IMAGE, nil
+	case "image/svg+xml":
+		return IMAGE, nil
+	case "audio/mpeg":
+		return AUDIO, nil
+	case "audio/aac":
+		return AUDIO, nil
+	case "text/css":
+		return TEXT, nil
+	case "text/csv":
+		return TEXT, nil
+	case "text/html":
+		return TEXT, nil
+	case "text/javascript":
+		return TEXT, nil
+	case "text/plain":
+		return TEXT, nil
+	case "text/xml":
+		return TEXT, nil
+	case "video/mpeg":
+		return VIDEO, nil
+	case "video/mp4":
+		return VIDEO, nil
+	}
+
+	return UNKNOWN, fmt.Errorf("Not supported type %s", file.ContentType)
 }
 
 func (file *SignalMediaBase) GetExtension() (string, error) {
