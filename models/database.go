@@ -145,7 +145,7 @@ type SignalConverstation struct {
 	QuoteMessageID             string                         `json:"quoteMessageId"`
 	DraftAttachments           []SignalAttachment             `json:"draftAttachments"`
 	DraftTimestamp             int64                          `json:"draftTimestamp"`
-	isPinned                   bool                           `json:"isPinned"`
+	IsPinned                   bool                           `json:"isPinned"`
 	UnreadCount                int                            `json:"unreadCount"`
 	Verified                   int                            `json:"verified"`
 	MessageCount               int                            `json:"messageCount"`

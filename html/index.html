@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+    integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+    crossorigin="anonymous" />
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+    integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"
+    integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf"
+    crossorigin="anonymous"></script>
+
+  <title>Signal backup</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="my-3 p-3 bg-white rounded shadow-sm">
+      <h6 class="border-bottom border-gray pb-2 mb-0">Conversations</h6>
+      {{ range .Conversations }}
+        {{ $conversationID := .ID}}
+
+        {{ if gt .MessageCount 0 }}
+          <div class="media text-muted pt-3">
+            {{ if eq .ProfileAvatar.Path ""}}
+              <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"></rect><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
+            {{ else }}
+              <img class="bd-placeholder-img mr-2 rounded" src="./{{ .ID }}/profile.png" width="32" height="32" />
+            {{ end }}
+            <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+              <div class="clearfix">
+                <div class="float-left">
+                  <div class="d-flex justify-content-between align-items-center w-100 float-left">
+                    <strong class="text-gray-dark">{{ .Name }}</strong>
+                  </div>
+                  {{ if not (eq .ProfileName "") }}
+                    <span class="d-block">@{{ .ProfileName }}</span>
+                  {{ end }}
+                </div>
+
+                <div class="float-right">
+                  {{ $dates := index $.Dates .ID }}
+                  {{ range $dates }}
+                    <a href="{{generateMessagePath $conversationID . }}">{{ . }}</a><br />
+                  {{ end }}
+                </div>
+              </div>
+            </div>
+          </div>
+        {{ end }}
+      {{ end }}
+    </div>
+  </div>
+</body>
+
+</html>

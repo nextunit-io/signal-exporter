@@ -87,11 +87,10 @@ func (s *Signal) exportMessages(conversationID string) []models.SignalMessage {
 	scanner := bufio.NewScanner(strings.NewReader(database.String()))
 
 	for scanner.Scan() {
-		var d models.SignalMessage
-
 		if scanner.Text() == "ok" {
 			continue
 		}
+		var d models.SignalMessage
 
 		err := json.Unmarshal(scanner.Bytes(), &d)
 		if err != nil {
@@ -128,12 +127,12 @@ func (s *Signal) exportConversations() []models.SignalConverstation {
 	data := []models.SignalConverstation{}
 
 	scanner := bufio.NewScanner(strings.NewReader(database.String()))
-	var d models.SignalConverstation
 
 	for scanner.Scan() {
 		if scanner.Text() == "ok" {
 			continue
 		}
+		var d models.SignalConverstation
 
 		err := json.Unmarshal(scanner.Bytes(), &d)
 		if err != nil {
