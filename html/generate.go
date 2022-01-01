@@ -309,18 +309,20 @@ func (data *html) prepareAttachments(conversationID string, message models.Signa
 			}
 		}
 
-		path := fmt.Sprintf("%s/%s.%s", data.getHTMLAttachmentPath((conversationID)), filename, ext)
-		err = copyFile(fmt.Sprintf("%s/attachments.noindex/%s", data.signalPath, attachment.Path), path)
-		if err != nil {
-			log.Print(color.RedString("[FAILED] "), fmt.Sprintf("Cannot copy attachment %s: %s", attachment.Thumbnail.ContentType, err))
-			continue
-		}
+		if attachment.Path != "" {
+			path := fmt.Sprintf("%s/%s.%s", data.getHTMLAttachmentPath((conversationID)), filename, ext)
+			err = copyFile(fmt.Sprintf("%s/attachments.noindex/%s", data.signalPath, attachment.Path), path)
+			if err != nil {
+				log.Print(color.RedString("[FAILED] "), fmt.Sprintf("Cannot copy attachment %s: %s", attachment.Thumbnail.ContentType, err))
+				continue
+			}
 
-		d = append(d, htmlAttachment{
-			Attachment:        attachment,
-			HTMLPath:          path,
-			HTMLThumbnailPath: thumbnailPath,
-		})
+			d = append(d, htmlAttachment{
+				Attachment:        attachment,
+				HTMLPath:          path,
+				HTMLThumbnailPath: thumbnailPath,
+			})
+		}
 	}
 
 	return d

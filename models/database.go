@@ -90,8 +90,28 @@ type SignalMessage struct {
 	RequiredProtocolVersion    int                          `json:"requiredProtocolVersion"`
 	SupportedVersionAtReceive  int                          `json:"supportedVersionAtReceive"`
 	Quote                      SignalQuote                  `json:"quote"`
-	Sticker                    string                       `json:"sticker"`
+	Sticker                    SignalSticker                `json:"sticker"`
 	ExpirationTimerUpdate      SignalMessageExpirationTimer `json:"expirationTimerUpdate"`
+}
+
+type SignalSticker struct {
+	PackId    string            `json:"packId"`
+	PackKey   string            `json:"packKey"`
+	StickerId int               `json:"stickerId"`
+	Data      SignalStickerData `json:"data"`
+}
+
+type SignalStickerData struct {
+	ID          int         `json:"id"`
+	PackId      string      `json:"packId"`
+	Emoji       string      `json:"emoji"`
+	IsCoverOnly bool        `json:"isCoverOnly"`
+	LastUsed    interface{} `json:"lastUsed"`
+	Path        string      `json:"path"`
+	Height      int         `json:"height"`
+	Width       int         `json:"width"`
+	ContentType string      `json:"contentType"`
+	Size        int         `json:"size"`
 }
 
 type SignalProfileAvatar struct {
