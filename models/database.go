@@ -16,7 +16,7 @@ type SignalPreview struct {
 	Title       string      `json:"title"`
 	Image       SignalImage `json:"image"`
 	Description string      `json:"description"`
-	Date        string      `json:"date"`
+	Date        interface{} `json:"date"`
 }
 
 type SignalMediaBase struct {
@@ -52,7 +52,7 @@ type SignalImage struct {
 }
 
 type SignalQuote struct {
-	ID          int                `json:"id"`
+	ID          interface{}        `json:"id"`
 	Author      string             `json:"author"`
 	AuthorUUID  string             `json:"authorUuid"`
 	Text        string             `json:"text"`
@@ -82,7 +82,7 @@ type SignalMessage struct {
 	SchemaVersion              int                          `json:"schemaVersion"`
 	Body                       string                       `json:"body"`
 	DecryptedAt                int                          `json:"decrypted_at"`
-	Errors                     []string                     `json:"errors"`
+	Errors                     []interface{}                `json:"errors"`
 	Flags                      int                          `json:"flags"`
 	HasAttachments             int                          `json:"hasAttachments"`
 	IsViewOnce                 bool                         `json:"isViewOnce"`
@@ -185,9 +185,13 @@ func (file *SignalMediaBase) GetFileType() (SignalMediaType, error) {
 		return TEXT, nil
 	case "text/xml":
 		return TEXT, nil
+	case "application/pdf":
+		return TEXT, nil
 	case "video/mpeg":
 		return VIDEO, nil
 	case "video/mp4":
+		return VIDEO, nil
+	case "video/quicktime":
 		return VIDEO, nil
 	}
 
@@ -226,6 +230,10 @@ func (file *SignalMediaBase) GetExtension() (string, error) {
 		return "mpeg", nil
 	case "video/mp4":
 		return "mp4", nil
+	case "video/quicktime":
+		return "mp4", nil
+	case "application/pdf":
+		return "pdf", nil
 	}
 
 	return "", fmt.Errorf("Not supported type %s", file.ContentType)
